@@ -30,6 +30,7 @@ public class AnimalExc extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
+        jButton4 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -67,6 +68,15 @@ public class AnimalExc extends javax.swing.JFrame {
         jTextField2.setToolTipText("");
         getContentPane().add(jTextField2);
         jTextField2.setBounds(340, 270, 572, 56);
+
+        jButton4.setBackground(new java.awt.Color(48, 157, 77));
+        jButton4.setFont(new java.awt.Font("Arial", 0, 20)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setText("Pesquisar");
+        jButton4.setBorder(null);
+        jButton4.setPreferredSize(new java.awt.Dimension(250, 121));
+        getContentPane().add(jButton4);
+        jButton4.setBounds(790, 160, 149, 77);
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -1221,6 +1231,7 @@ public class AnimalExc extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
