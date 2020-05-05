@@ -5,6 +5,15 @@
  */
 package telas;
 
+import dao.ServicosDao;
+import entidade.Servicos;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+
 /**
  *
  * @author lucas
@@ -16,6 +25,7 @@ public class ServiçosCad extends javax.swing.JFrame {
      */
     public ServiçosCad() {
         initComponents();
+        txttempo.setModel(new SpinnerNumberModel(0,0,100,1));
     }
 
     /**
@@ -28,17 +38,19 @@ public class ServiçosCad extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtcodigo = new javax.swing.JTextField();
+        txtnome = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        txtvalor = new javax.swing.JFormattedTextField();
+        txttempo = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jSplitPane1 = new javax.swing.JSplitPane();
 
         setTitle("Tela Principal");
         setMinimumSize(new java.awt.Dimension(1280, 722));
@@ -50,29 +62,58 @@ public class ServiçosCad extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Codigo");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(290, 170, 140, 60);
+        jLabel2.setBounds(200, 190, 140, 60);
 
-        jTextField1.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField1.setToolTipText("");
-        jTextField1.setEnabled(false);
-        getContentPane().add(jTextField1);
-        jTextField1.setBounds(430, 170, 480, 56);
+        txtcodigo.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        txtcodigo.setToolTipText("");
+        txtcodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtcodigoActionPerformed(evt);
+            }
+        });
+        txtcodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtcodigoKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtcodigo);
+        txtcodigo.setBounds(340, 190, 480, 56);
 
-        jTextField2.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField2.setToolTipText("");
-        getContentPane().add(jTextField2);
-        jTextField2.setBounds(340, 270, 572, 56);
+        txtnome.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        txtnome.setToolTipText("");
+        txtnome.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtnomeKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtnome);
+        txtnome.setBounds(340, 270, 572, 56);
+
+        jLabel8.setFont(new java.awt.Font("Arial", 0, 30)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Minutos");
+        getContentPane().add(jLabel8);
+        jLabel8.setBounds(450, 350, 130, 60);
+
+        try {
+            txtvalor.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.00")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtvalor.setFont(new java.awt.Font("Arial", 0, 32)); // NOI18N
+        getContentPane().add(txtvalor);
+        txtvalor.setBounds(720, 350, 140, 56);
+
+        txttempo.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        txttempo.setRequestFocusEnabled(false);
+        getContentPane().add(txttempo);
+        txttempo.setBounds(340, 350, 100, 56);
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Nome");
         getContentPane().add(jLabel3);
         jLabel3.setBounds(240, 270, 90, 60);
-
-        jTextField3.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField3.setToolTipText("");
-        getContentPane().add(jTextField3);
-        jTextField3.setBounds(340, 350, 572, 56);
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -84,12 +125,7 @@ public class ServiçosCad extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Valor");
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(220, 430, 100, 60);
-
-        jTextField4.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField4.setToolTipText("");
-        getContentPane().add(jTextField4);
-        jTextField4.setBounds(340, 430, 572, 56);
+        jLabel6.setBounds(620, 350, 100, 60);
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 37)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -104,6 +140,11 @@ public class ServiçosCad extends javax.swing.JFrame {
         jButton7.setText("Salvar");
         jButton7.setBorder(null);
         jButton7.setPreferredSize(new java.awt.Dimension(250, 121));
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton7);
         jButton7.setBounds(510, 530, 204, 71);
 
@@ -118,10 +159,58 @@ public class ServiçosCad extends javax.swing.JFrame {
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 1280, 722);
+        getContentPane().add(jSplitPane1);
+        jSplitPane1.setBounds(320, 210, 233, 27);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+
+        Servicos s = new Servicos();
+        ServicosDao sdao = new ServicosDao();
+
+        if (txtnome.getText().equals("") || txtvalor.getText().equals("")) {
+
+            JOptionPane.showMessageDialog(this, "Por favor preencher todos os campos Obrigatorios!!");
+
+        } else {
+
+            s.setServid(Integer.parseInt(txtcodigo.getText()));
+            s.setServnome(txtnome.getText());
+            s.setServtemp(Integer.parseInt(txttempo.getValue().toString()));
+            s.setServval(Double.parseDouble(txtvalor.getText()));
+
+            try {
+                sdao.Cadastrar(s);
+                JOptionPane.showMessageDialog(this, "Dados Salvos Com Sucesso!");
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiçosCad.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Cadastro ja Existente para o Codigo ou Nome Informado", "Atenção", 0);
+
+            }
+
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void txtcodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcodigoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtcodigoActionPerformed
+
+    private void txtcodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcodigoKeyTyped
+        String caracteres = "0987654321";
+        if (!caracteres.contains(evt.getKeyChar() + "")) { //Aceitar Apenas Numereos
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtcodigoKeyTyped
+
+    private void txtnomeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtnomeKeyTyped
+       String caracteres = "0987654321";
+        if (caracteres.contains(evt.getKeyChar() + "")) { // Aceitar Apenas Letras
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtnomeKeyTyped
 
     /**
      * @param args the command line arguments
@@ -198,9 +287,11 @@ public class ServiçosCad extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTextField txtcodigo;
+    private javax.swing.JTextField txtnome;
+    private javax.swing.JSpinner txttempo;
+    private javax.swing.JFormattedTextField txtvalor;
     // End of variables declaration//GEN-END:variables
 }

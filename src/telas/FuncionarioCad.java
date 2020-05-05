@@ -5,6 +5,13 @@
  */
 package telas;
 
+import dao.FuncionarioDao;
+import entidade.Funcionario;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author lucas
@@ -28,11 +35,13 @@ public class FuncionarioCad extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtcpf = new javax.swing.JFormattedTextField();
+        txtnome = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtcargo = new javax.swing.JTextField();
         jButton7 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -50,6 +59,12 @@ public class FuncionarioCad extends javax.swing.JFrame {
         getContentPane().add(jLabel4);
         jLabel4.setBounds(450, 70, 370, 60);
 
+        jLabel6.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("CPF");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(240, 340, 90, 60);
+
         jTextField1.setEditable(false);
         jTextField1.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
         jTextField1.setToolTipText("");
@@ -62,21 +77,40 @@ public class FuncionarioCad extends javax.swing.JFrame {
         getContentPane().add(jLabel3);
         jLabel3.setBounds(240, 270, 90, 60);
 
-        jTextField2.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField2.setToolTipText("");
-        getContentPane().add(jTextField2);
-        jTextField2.setBounds(340, 270, 572, 56);
+        try {
+            txtcpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtcpf.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        getContentPane().add(txtcpf);
+        txtcpf.setBounds(340, 340, 572, 56);
+
+        txtnome.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        txtnome.setToolTipText("");
+        txtnome.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtnomeKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtnome);
+        txtnome.setBounds(340, 270, 572, 56);
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Cargo");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(240, 350, 90, 60);
+        jLabel5.setBounds(240, 410, 90, 60);
 
-        jTextField3.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField3.setToolTipText("");
-        getContentPane().add(jTextField3);
-        jTextField3.setBounds(340, 350, 572, 56);
+        txtcargo.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        txtcargo.setToolTipText("");
+        txtcargo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtcargoKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtcargo);
+        txtcargo.setBounds(340, 410, 572, 56);
 
         jButton7.setBackground(new java.awt.Color(0, 135, 255));
         jButton7.setFont(new java.awt.Font("Arial", 0, 20)); // NOI18N
@@ -85,6 +119,11 @@ public class FuncionarioCad extends javax.swing.JFrame {
         jButton7.setText("Salvar");
         jButton7.setBorder(null);
         jButton7.setPreferredSize(new java.awt.Dimension(250, 121));
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton7);
         jButton7.setBounds(510, 480, 204, 71);
 
@@ -109,6 +148,65 @@ public class FuncionarioCad extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+
+        Funcionario f = new Funcionario();
+        FuncionarioDao fdao = new FuncionarioDao();
+
+        if (txtnome.getText().equals("") || txtcargo.getText().equals("")) {
+
+            JOptionPane.showMessageDialog(this, "Por favor preencher todos os campos Obrigatorios!!");
+
+        } else {
+
+            String pesq = txtcpf.getText();
+            int iresq = 0;
+            try {
+
+                //iresq = fdao.Buscar(pesq);
+                System.out.println("i" + iresq);
+
+                if (iresq == 1) {
+                    JOptionPane.showMessageDialog(this, "Usuario ja Exixte");
+
+                } else {
+                    f.setFunnome(txtnome.getText());
+                    f.setFuncpf(pesq);
+                    f.setFuncargo(txtcargo.getText());
+                    fdao.Cadastrar(f);
+                    JOptionPane.showMessageDialog(this, "Dados Salvos Com Sucesso!");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(FuncionarioCad.class.getName()).log(Level.SEVERE, null, ex);
+                //
+                JOptionPane.showMessageDialog(this, "Cadastro ja Existente para o CPF Informado", "Atenção", 0);
+                // }else{
+                //    JOptionPane.showMessageDialog(this,ex);
+                // }
+
+            }
+
+            f.setFuncpf(txtcpf.getText());
+
+        }
+
+// TODO add your handling code here:
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void txtnomeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtnomeKeyTyped
+        String caracteres = "0987654321";
+        if (caracteres.contains(evt.getKeyChar() + "")) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtnomeKeyTyped
+
+    private void txtcargoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcargoKeyTyped
+        String caracteres = "0987654321";
+        if (caracteres.contains(evt.getKeyChar() + "")) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtcargoKeyTyped
 
     /**
      * @param args the command line arguments
@@ -168,8 +266,10 @@ public class FuncionarioCad extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField txtcargo;
+    private javax.swing.JFormattedTextField txtcpf;
+    private javax.swing.JTextField txtnome;
     // End of variables declaration//GEN-END:variables
 }

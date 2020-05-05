@@ -5,6 +5,13 @@
  */
 package telas;
 
+import dao.AnimalDao;
+import entidade.Animal;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author lucas
@@ -29,19 +36,21 @@ public class AnimalCad extends javax.swing.JFrame {
 
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtnome = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        txtnomedono = new javax.swing.JTextField();
+        txtcpf = new javax.swing.JFormattedTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        txtraca = new javax.swing.JTextField();
+        txtclass = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
+        txtende = new javax.swing.JTextField();
+        txttelefone = new javax.swing.JFormattedTextField();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -60,19 +69,55 @@ public class AnimalCad extends javax.swing.JFrame {
 
         jTextField1.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
         jTextField1.setToolTipText("");
+        jTextField1.setEnabled(false);
         getContentPane().add(jTextField1);
         jTextField1.setBounds(430, 170, 342, 56);
 
-        jTextField2.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField2.setToolTipText("");
-        getContentPane().add(jTextField2);
-        jTextField2.setBounds(340, 270, 572, 56);
+        txtnome.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        txtnome.setToolTipText("");
+        txtnome.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtnomeKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtnome);
+        txtnome.setBounds(340, 270, 572, 56);
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Nome");
         getContentPane().add(jLabel3);
         jLabel3.setBounds(240, 270, 90, 60);
+
+        jLabel10.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Nome do Dono");
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(630, 510, 220, 60);
+
+        txtnomedono.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        txtnomedono.setToolTipText("");
+        txtnomedono.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtnomedonoActionPerformed(evt);
+            }
+        });
+        txtnomedono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtnomedonoKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtnomedono);
+        txtnomedono.setBounds(870, 510, 300, 56);
+
+        try {
+            txtcpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtcpf.setFont(new java.awt.Font("Arial", 0, 32)); // NOI18N
+        getContentPane().add(txtcpf);
+        txtcpf.setBounds(300, 510, 320, 56);
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -86,15 +131,25 @@ public class AnimalCad extends javax.swing.JFrame {
         getContentPane().add(jLabel8);
         jLabel8.setBounds(100, 590, 140, 60);
 
-        jTextField3.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField3.setToolTipText("");
-        getContentPane().add(jTextField3);
-        jTextField3.setBounds(340, 350, 572, 56);
+        txtraca.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        txtraca.setToolTipText("");
+        txtraca.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtracaKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtraca);
+        txtraca.setBounds(340, 350, 572, 56);
 
-        jTextField4.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField4.setToolTipText("");
-        getContentPane().add(jTextField4);
-        jTextField4.setBounds(340, 430, 572, 56);
+        txtclass.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        txtclass.setToolTipText("");
+        txtclass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtclassKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtclass);
+        txtclass.setBounds(340, 430, 572, 56);
 
         jLabel6.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -104,7 +159,7 @@ public class AnimalCad extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Nome do Dono");
+        jLabel7.setText("CPF do Dono");
         getContentPane().add(jLabel7);
         jLabel7.setBounds(100, 510, 220, 60);
 
@@ -121,23 +176,27 @@ public class AnimalCad extends javax.swing.JFrame {
         jButton7.setText("Salvar");
         jButton7.setBorder(null);
         jButton7.setPreferredSize(new java.awt.Dimension(250, 121));
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton7);
-        jButton7.setBounds(970, 430, 204, 71);
+        jButton7.setBounds(970, 350, 204, 71);
 
-        jTextField7.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField7.setToolTipText("");
-        getContentPane().add(jTextField7);
-        jTextField7.setBounds(750, 590, 330, 56);
+        txtende.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        txtende.setToolTipText("");
+        getContentPane().add(txtende);
+        txtende.setBounds(750, 590, 420, 56);
 
-        jTextField5.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField5.setToolTipText("");
-        getContentPane().add(jTextField5);
-        jTextField5.setBounds(240, 590, 330, 56);
-
-        jTextField6.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField6.setToolTipText("");
-        getContentPane().add(jTextField6);
-        jTextField6.setBounds(340, 510, 572, 56);
+        try {
+            txttelefone.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##)9####-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txttelefone.setFont(new java.awt.Font("Arial", 0, 32)); // NOI18N
+        getContentPane().add(txttelefone);
+        txttelefone.setBounds(240, 590, 330, 56);
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 37)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -160,6 +219,70 @@ public class AnimalCad extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+
+        Animal a = new Animal();
+        AnimalDao adao = new AnimalDao();
+        
+        
+        if (txtnome.getText().equals("") || txtraca.getText().equals("") || txtclass.getText().equals("") || txttelefone.getText().equals("") || txtende.getText().equals("")) {
+
+            JOptionPane.showMessageDialog(this, "Por favor preencher todos os campos Obrigatorios!!");
+
+        } else {
+            
+            a.setAninome(txtnome.getText());
+            a.setAniraca(txtraca.getText());
+            a.setAniclass(txtclass.getText());
+            a.setAnicpf(txtcpf.getText());
+            a.setAninomedono(txtnomedono.getText());
+            a.setAnitelefone(txttelefone.getText());
+            a.setAniendereco(txtende.getText());
+            
+            try {
+                adao.Buscar(a);
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(AnimalCad.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            
+
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void txtnomedonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnomedonoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtnomedonoActionPerformed
+
+    private void txtnomeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtnomeKeyTyped
+        String caracteres = "0987654321";
+        if (caracteres.contains(evt.getKeyChar() + "")) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtnomeKeyTyped
+
+    private void txtracaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtracaKeyTyped
+        String caracteres = "0987654321";
+        if (caracteres.contains(evt.getKeyChar() + "")) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtracaKeyTyped
+
+    private void txtclassKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtclassKeyTyped
+        String caracteres = "0987654321";
+        if (caracteres.contains(evt.getKeyChar() + "")) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtclassKeyTyped
+
+    private void txtnomedonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtnomedonoKeyTyped
+        String caracteres = "0987654321";
+        if (caracteres.contains(evt.getKeyChar() + "")) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtnomedonoKeyTyped
 
     /**
      * @param args the command line arguments
@@ -711,6 +834,7 @@ public class AnimalCad extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -720,11 +844,12 @@ public class AnimalCad extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField txtclass;
+    private javax.swing.JFormattedTextField txtcpf;
+    private javax.swing.JTextField txtende;
+    private javax.swing.JTextField txtnome;
+    private javax.swing.JTextField txtnomedono;
+    private javax.swing.JTextField txtraca;
+    private javax.swing.JFormattedTextField txttelefone;
     // End of variables declaration//GEN-END:variables
 }

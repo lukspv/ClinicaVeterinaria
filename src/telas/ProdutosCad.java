@@ -5,6 +5,18 @@
  */
 package telas;
 
+import dao.ProdutoDao;
+import entidade.Produto;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.SpinnerNumberModel;
+
 /**
  *
  * @author lucas
@@ -14,8 +26,19 @@ public class ProdutosCad extends javax.swing.JFrame {
     /**
      * Creates new form Prinicipal
      */
-    public ProdutosCad() {
+    public ProdutosCad() throws ParseException {
         initComponents();
+        txtqtd.setModel(new SpinnerNumberModel(0, 0, 100, 1)); //sequencia de parametros é: o valor inicial, mínimo, máximo, incremento/decremento…
+        txtvalidade.setDateFormatString("dd/MM/yyyy");
+
+        Date dataAtual = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String dataFormatada = dateFormat.format(dataAtual);
+
+        String date = dataFormatada;
+        java.util.Date date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+        //System.out.println("Data: "+new Date());
+        txtvalidade.setDate(date2);
     }
 
     /**
@@ -28,15 +51,15 @@ public class ProdutosCad extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtcodigo = new javax.swing.JTextField();
+        txtnome = new javax.swing.JTextField();
+        txtvalor = new javax.swing.JFormattedTextField();
+        txtvalidade = new com.toedter.calendar.JDateChooser();
+        txtqtd = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
@@ -52,17 +75,44 @@ public class ProdutosCad extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Codigo");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(290, 170, 140, 60);
+        jLabel2.setBounds(200, 190, 140, 60);
 
-        jTextField1.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField1.setToolTipText("");
-        getContentPane().add(jTextField1);
-        jTextField1.setBounds(430, 170, 342, 56);
+        txtcodigo.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        txtcodigo.setToolTipText("");
+        txtcodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtcodigoKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtcodigo);
+        txtcodigo.setBounds(340, 190, 342, 56);
 
-        jTextField2.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField2.setToolTipText("");
-        getContentPane().add(jTextField2);
-        jTextField2.setBounds(340, 270, 572, 56);
+        txtnome.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        txtnome.setToolTipText("");
+        txtnome.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtnomeKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtnome);
+        txtnome.setBounds(340, 270, 572, 56);
+
+        try {
+            txtvalor.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.00")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtvalor.setFont(new java.awt.Font("Arial", 0, 32)); // NOI18N
+        getContentPane().add(txtvalor);
+        txtvalor.setBounds(780, 440, 130, 56);
+
+        txtvalidade.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        getContentPane().add(txtvalidade);
+        txtvalidade.setBounds(340, 350, 572, 56);
+
+        txtqtd.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
+        getContentPane().add(txtqtd);
+        txtqtd.setBounds(340, 440, 120, 56);
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -76,16 +126,6 @@ public class ProdutosCad extends javax.swing.JFrame {
         getContentPane().add(jLabel5);
         jLabel5.setBounds(190, 350, 140, 60);
 
-        jTextField3.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField3.setToolTipText("");
-        getContentPane().add(jTextField3);
-        jTextField3.setBounds(340, 350, 572, 56);
-
-        jTextField4.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField4.setToolTipText("");
-        getContentPane().add(jTextField4);
-        jTextField4.setBounds(340, 430, 572, 56);
-
         jLabel6.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Quantidade");
@@ -96,12 +136,7 @@ public class ProdutosCad extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Valor");
         getContentPane().add(jLabel7);
-        jLabel7.setBounds(230, 510, 90, 60);
-
-        jTextField5.setFont(new java.awt.Font("Arial", 0, 33)); // NOI18N
-        jTextField5.setToolTipText("");
-        getContentPane().add(jTextField5);
-        jTextField5.setBounds(340, 510, 572, 56);
+        jLabel7.setBounds(670, 430, 90, 60);
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 37)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -116,6 +151,11 @@ public class ProdutosCad extends javax.swing.JFrame {
         jButton7.setText("Salvar");
         jButton7.setBorder(null);
         jButton7.setPreferredSize(new java.awt.Dimension(250, 121));
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton7);
         jButton7.setBounds(510, 610, 204, 71);
 
@@ -134,6 +174,49 @@ public class ProdutosCad extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+
+        Produto p = new Produto();
+        ProdutoDao pdao = new ProdutoDao();
+
+        if (txtnome.getText().equals("") || txtvalor.getText().equals("")) {
+
+            JOptionPane.showMessageDialog(this, "Por favor preencher todos os campos Obrigatorios!!");
+
+        } else {
+
+            p.setProid(Integer.parseInt(txtcodigo.getText()));
+            p.setPronome(txtnome.getText());
+            p.setProdval(txtvalidade.getDate().toString());
+            p.setQtd(Integer.parseInt(txtqtd.getValue().toString()));
+            p.setProdvalor(Double.parseDouble(txtvalor.getText()));
+
+            try {
+                pdao.Cadastrar(p);
+                JOptionPane.showMessageDialog(this, "Dados Salvos Com Sucesso!");
+            } catch (SQLException ex) {
+                Logger.getLogger(ProdutosCad.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Cadastro ja Existente para o Codigo ou Nome Informado", "Atenção", 0);
+            }
+
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void txtnomeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtnomeKeyTyped
+
+        String caracteres = "0987654321";
+        if (caracteres.contains(evt.getKeyChar() + "")) {
+            evt.consume();
+        }// TODO add your handling code here:
+    }//GEN-LAST:event_txtnomeKeyTyped
+
+    private void txtcodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcodigoKeyTyped
+        String caracteres = "0987654321";
+        if (!caracteres.contains(evt.getKeyChar() + "")) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtcodigoKeyTyped
 
     /**
      * @param args the command line arguments
@@ -228,7 +311,11 @@ public class ProdutosCad extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ProdutosCad().setVisible(true);
+                try {
+                    new ProdutosCad().setVisible(true);
+                } catch (ParseException ex) {
+                    Logger.getLogger(ProdutosCad.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -243,10 +330,10 @@ public class ProdutosCad extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField txtcodigo;
+    private javax.swing.JTextField txtnome;
+    private javax.swing.JSpinner txtqtd;
+    private com.toedter.calendar.JDateChooser txtvalidade;
+    private javax.swing.JFormattedTextField txtvalor;
     // End of variables declaration//GEN-END:variables
 }
